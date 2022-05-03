@@ -22,8 +22,9 @@ jobs:
         run: gcloud auth configure-docker --quiet
 
       - name: wd
-        run: cd cloud-run/my-cloud-run
-        pwd
+        run: |
+          cd cloud-run/my-cloud-run
+          pwd
 
       - name: Build Docker image
         run: docker build . --tag gcr.io/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_APPLICATION }}
