@@ -26,6 +26,7 @@ jobs:
           cd cloud-run/my-cloud-run
           pwd
 
+
       - name: Build Docker image
         run: docker build ./cloud-run/my-cloud-run --tag gcr.io/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_APPLICATION }}
 
