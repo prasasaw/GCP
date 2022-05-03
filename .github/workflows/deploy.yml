@@ -34,5 +34,3 @@ jobs:
 
       - name: Deploy Docker image
         run: gcloud run deploy ${{ secrets.GCP_APPLICATION }} --image gcr.io/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_APPLICATION }} --region europe-west1  --platform managed --allow-unauthenticated
-
-     
