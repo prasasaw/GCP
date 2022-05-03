@@ -18,5 +18,16 @@ jobs:
       - name: Check out Git repository
         uses: actions/checkout@v2
 
-      - name: Configure Docker in prod
+      - name: Configure Docker
         run: gcloud auth configure-docker --quiet
+
+      - name: Build Docker image
+        run: docker build . --tag gcr.io/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_APPLICATION }}
+
+      - name: Push Docker image
+        run: docker push gcr.io/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_APPLICATION }}
+
+      - name: Deploy Docker image
+        run: gcloud run deploy ${{ secrets.GCP_APPLICATION }} --image gcr.io/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_APPLICATION }} --region europe-west1  --platform managed --allow-unauthenticated
+
+     
