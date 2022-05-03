@@ -15,4 +15,8 @@ jobs:
           service_account_email: ${{ secrets.GCP_EMAIL }}
           service_account_key: ${{ secrets.GCP_CREDENTIALS }}
 
-      
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Configure Docker in prod
+        run: gcloud auth configure-docker --quiet
