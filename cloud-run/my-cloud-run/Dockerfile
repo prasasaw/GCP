@@ -11,6 +11,7 @@ WORKDIR /my_cloud_run
 # Install Python Requirements
 #RUN pip install -r requirements.txt
 
+RUN pip install poetry
 RUN poetry install
 
 # Run the web service on container startup. Here we use the gunicorn
