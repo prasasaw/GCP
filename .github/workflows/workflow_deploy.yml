@@ -1,0 +1,24 @@
+name: cloud-workflow-deploy
+on:
+  push:
+    paths:
+      - ".github/workflows/workflow_deploy.yml"
+      - "cloud-workflows/my-workflow/**"
+    branches:
+      - main
+jobs:
+  Cloud_Run_deploy:
+    name: Cloud workflow deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: setup
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+          project_id: ${{ secrets.GCP_PROJECT }}
+          service_account_email: ${{ secrets.GCP_EMAIL }}
+          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      

@@ -1,6 +1,9 @@
 name: cloudrun-deploy
 on:
   push:
+    paths:
+      - ".github/workflows/cloud_run_deploy.yml"
+      - "cloud-run/my-cloud-run/**"
     branches:
       - main
 jobs:
