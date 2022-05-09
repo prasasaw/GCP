@@ -23,4 +23,4 @@ jobs:
 
 
       - name: deploy workflow
-        run: gcloud workflows deploy my-workflow --location=us-central1-a --description='my beginners workflow' --source=workflow.yaml
+        run: gcloud workflows deploy my-workflow --location=europe-west1 --description='my beginners workflow' --source=workflow.yaml
