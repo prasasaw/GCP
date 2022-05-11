@@ -4,13 +4,28 @@ main:
         assign:
           - gcs_to_bq_url: https://us-central1-prasad-gcp4-project.cloudfunctions.net/function-1
           
-    
     - gcs_to_bq:
         call: http.post
         args:
           url: ${gcs_to_bq_url}
           body:
-              message: "Hello world!"
-              
-        result: some_result
-        next: end
+              message: "{"status": "success"}""
+        result: response
+        next: setResponse
+    
+    - setResponse:
+        assign:
+          - status: ${response.status}
+        next: readResponse
+    
+    - readResponse:
+        switch:
+          - condition: ${status == "success"}
+            next: successPrint
+        next: failurePrint
+
+    - successPrint:
+        return: "files imported"
+
+    - failurePrint:
+        return: "files failed"
