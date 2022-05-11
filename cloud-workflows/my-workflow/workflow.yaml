@@ -9,7 +9,7 @@ main:
         args:
           url: ${gcs_to_bq_url}
           body:
-              message: "{"status": "success"}""
+              message: "hello world!"
         result: response
         next: setResponse
     
