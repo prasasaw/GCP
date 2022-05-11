@@ -2,9 +2,15 @@ main:
   steps:
     - constants:
         assign:
-          - create_job_url: CREATE_JOB_URL
-          - poll_job_url: POLL_JOB_URL
-          - run_job_url: RUN_JOB_URL
-          - create_query_url: CREATE_QUERY_URL
-          - region: BQ_REGION
-          - table_name: BQ_DATASET_TABLE_NAME
+          - gcs_to_bq_url: https://us-central1-prasad-gcp4-project.cloudfunctions.net/function-1
+          
+    
+    - gcs_to_bq:
+        call: http.post
+        args:
+          url: ${gcs_to_bq_url}
+          body:
+              message: "Hello world!"
+              
+        result: some_result
+        next: end
