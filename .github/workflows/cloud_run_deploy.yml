@@ -5,6 +5,7 @@ on:
       - ".github/workflows/cloud_run_deploy.yml"
       - "cloud-run/my-cloud-run/**"
     branches:
+      - dev
       - main
 jobs:
   Cloud_Run_deploy:
