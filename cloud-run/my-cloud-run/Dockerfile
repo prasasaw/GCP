@@ -13,6 +13,7 @@ WORKDIR /my_cloud_run
 
 RUN pip install poetry
 RUN poetry install
+RUN poetry lock
 
 # Run the web service on container startup. Here we use the gunicorn
 # webserver, with one worker process and 8 threads.
