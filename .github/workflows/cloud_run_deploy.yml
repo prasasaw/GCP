@@ -5,6 +5,7 @@ on:
       - ".github/workflows/cloud_run_deploy.yml"
       - "cloud-run/my-cloud-run/**"
     branches:
+      - dev
       - main
 jobs:
   Cloud_Run_deploy:
@@ -36,4 +37,4 @@ jobs:
         run: docker push gcr.io/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_APPLICATION }}
 
       - name: Deploy Docker image
-        run: gcloud run deploy ${{ secrets.GCP_APPLICATION }} --image gcr.io/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_APPLICATION }} --region europe-west1  --platform managed --allow-unauthenticated
+        run: gcloud run deploy ${{ secrets.GCP_APPLICATION }} --image gcr.io/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_APPLICATION }} --region europe-west1  --platform managed --allow-unauthenticated --max-instances=10

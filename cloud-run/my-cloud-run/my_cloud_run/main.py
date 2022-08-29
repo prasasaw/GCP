@@ -11,7 +11,7 @@ def hello_there():
 @app.route('/')
 def hello_world():
     name = request.args.get('name', 'World')
-    return f'Helloz {name}!'
+    return f'Hellow {name}!'
 
 def start():
     print("Hellooooooo!!!")
