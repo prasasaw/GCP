@@ -1,0 +1,2 @@
+﻿orderId,orderType,orderDateTime,customerId,country,insertDateTime
+12345,sales_order,20220913000000,cust_1321412,CA,20220913000000
