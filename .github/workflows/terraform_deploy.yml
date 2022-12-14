@@ -11,13 +11,10 @@ on:
       - "terraform/**"
     branches:
       - dev
+      - main
       
   pull_request:
-    branches:
-      - dev
-    types:
-      - synchronize
-
+    
 
 jobs:
   terraform:
@@ -50,31 +47,14 @@ jobs:
 
     # Generates an execution plan for Terraform
     - name: Terraform Plan
-      run: terraform plan
+      run: terraform plan 
       env:
         GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
 
-    - name: Show plan
-      #if: github.event_name == 'pull_request' && endsWith(github.ref, '/dev')
-      uses: actions/github-script@0.9.0
+     # On push to main, build or change infrastructure according to Terraform configuration files
+      # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: terraform apply -auto-approve
       env:
-        PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
-      with:
         GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
-        script: |
-          const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
-          #### Terraform Initialization \`${{ steps.init.outcome }}\`
-          #### Terraform Plan \`${{ steps.plan.outcome }}\`
-          #### Terraform Validation \`${{ steps.validate.outcome }}\`
-          <details><summary>Show Plan</summary>
-          \`\`\`\n
-          ${process.env.PLAN}
-          \`\`\`
-          </details>
-          *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
-          github.issues.createComment({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: output
-          })
