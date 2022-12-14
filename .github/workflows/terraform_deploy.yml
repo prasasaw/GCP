@@ -52,7 +52,7 @@ jobs:
     - name: Terraform Plan
       run: terraform plan
       env:
-        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+        GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
 
     - name: Show plan
       #if: github.event_name == 'pull_request' && endsWith(github.ref, '/dev')
