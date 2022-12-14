@@ -1,0 +1,43 @@
+# references
+# https://developer.hashicorp.com/terraform/tutorials/automation/github-actions
+# https://github.com/vikramshinde12/terraform-gcp-github-actions/blob/main/.github/workflows/workflow.yaml
+
+name: 'Terraform provisioning'
+
+on:
+  push:
+    branches:
+    - main
+      
+  pull_request:
+    branches:
+      - main
+    types:
+      - synchronize
+
+
+jobs:
+  terraform:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./terraform    ####please change folder name as per github repo####################
+
+    steps:
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+
+    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+    - name: Terraform Init  
+      #run: terraform init -backend-config=main/backend.config
+      run: terraform init 
+      env:
+        GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
