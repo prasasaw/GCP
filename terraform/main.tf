@@ -4,7 +4,7 @@ resource "google_storage_bucket" "bucket" {
 }
 
 
-resource "google_storage_bucket" "bucket" {
+resource "google_storage_bucket" "anay_bucket" {
   name     = "test-bucket-random-anay"
   location = "europe-west2"
 }
