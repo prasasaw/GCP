@@ -5,7 +5,7 @@ on:
       - ".github/workflows/workflow_deploy.yml"
       - "cloud-workflows/my-workflow/**"
     branches:
-      - main
+      - dev
 jobs:
   Cloud_Run_deploy:
     name: Cloud workflow deploy

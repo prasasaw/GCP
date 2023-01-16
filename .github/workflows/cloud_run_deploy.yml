@@ -6,7 +6,7 @@ on:
       - "cloud-run/my-cloud-run/**"
     branches:
       - dev
-      - main
+      
 jobs:
   Cloud_Run_deploy:
     name: Cloud Run Deploy

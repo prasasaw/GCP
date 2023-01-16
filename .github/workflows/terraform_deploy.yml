@@ -11,7 +11,7 @@ on:
       - "terraform/**"
     branches:
       - dev
-      - main
+      
       
   pull_request:
     
