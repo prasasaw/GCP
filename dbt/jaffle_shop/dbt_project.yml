@@ -39,3 +39,4 @@ models:
 
 tests:
   +store_failures: true  # all tests
+  +schema: daily_test_results
