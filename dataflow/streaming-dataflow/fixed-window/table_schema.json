@@ -1,0 +1,20 @@
+[
+  {
+    "description": "Unique Customer Id in the context of  CustomerSourceId",
+    "mode": "REQUIRED",
+    "name": "customerId",
+    "type": "STRING"
+  },
+  {
+    "description": "Classification of Customer Id",
+    "mode": "NULLABLE",
+    "name": "customerIdType",
+    "type": "STRING"
+  },
+  {
+    "description": "System or organisational body that has created and assures the uniqueness of the CustomerId",
+    "mode": "NULLABLE",
+    "name": "customerIdSource",
+    "type": "STRING"
+  }
+]
