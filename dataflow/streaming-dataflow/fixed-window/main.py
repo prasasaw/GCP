@@ -44,7 +44,10 @@ def generate_schema(schema_json):
 class BQTransformation(beam.DoFn):
     def process(self, element):
         try:
+            import pdb
+            pdb.set_trace()
             elm = deepcopy(element)
+            print(elm)
             return elm
 
         except Exception as err:
@@ -62,7 +65,7 @@ class BQTransformation(beam.DoFn):
 def dataflow(run_local):
     """Run the dataflow"""
     schema = generate_schema(TABLE_SCHEMA)
-    job_name = "orders-v1"
+    job_name = "orders-v2"
     pipeline_options = {
         "project": PROJECT,
         "staging_location": "gs://" + BUCKET + "/staging",
@@ -82,17 +85,17 @@ def dataflow(run_local):
     if GENERATE_TEMPLATE:
         pipeline_options["template_location"] = "gs://" + BUCKET + "/template/DF_Orders"
 
-    options = PipelineOptions.from_dictionary(pipeline_options)
     if run_local:
         print("Running Locally...")
         pipeline_options["runner"] = "DirectRunner"
 
+    options = PipelineOptions.from_dictionary(pipeline_options)
+    
     with beam.Pipeline(options=options) as pipe:
-        order_events = pipe | "Read Topic from PubSub" >> beam.io.ReadFromPubSub(
-            topic=TOPIC
-        ).with_output_types(bytes)
+        order_events = pipe | "Read Topic from PubSub" >> beam.io.ReadFromPubSub(subscription=SUBSCRIPTION)
+        #.with_output_types(bytes)
 
-        (
+        """(
             order_events
             | "Transform to BQ dict" >> beam.ParDo(BQTransformation())
             | "Write To Partitioned BigQuery Table"
@@ -104,7 +107,7 @@ def dataflow(run_local):
                 insert_retry_strategy="neverRetry",
                 # create_disposition=bigquery_options.BigQueryDisposition.CREATE_NEVER,
             )
-        )
+        )"""
 
 
 if __name__ == "__main__":

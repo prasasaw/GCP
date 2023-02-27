@@ -1,6 +1,18 @@
 resource "google_storage_bucket" "bucket" {
-  name     = "fixed-window-117"
+  name     = "dataflow-storage-117"
   location = "europe-west2"
+}
+
+resource "google_storage_bucket_object" "staging" {
+  name          = "staging/"
+  content       = "dataflow staging dir"
+  bucket        = "dataflow-storage-117"
+}
+
+resource "google_storage_bucket_object" "temp" {
+  name          = "temp/"
+  content       = "dataflow temp dir"
+  bucket        = "dataflow-storage-117"
 }
 
 resource "google_pubsub_topic" "topic" {
@@ -10,7 +22,7 @@ resource "google_pubsub_topic" "topic" {
 
 resource "google_pubsub_subscription" "subscription" {
   name  = "orders-sub"
-  topic = google_pubsub_topic.topic.orders
+  topic = "orders"
 
   labels = {
     purpose = "streaming-dataflow"
