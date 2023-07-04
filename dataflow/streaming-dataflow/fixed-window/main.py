@@ -87,14 +87,12 @@ def dataflow(run_local):
         pipeline_options["runner"] = "DirectRunner"
 
     options = PipelineOptions.from_dictionary(pipeline_options)
-    
+
     with beam.Pipeline(options=options) as pipe:
-        order_events = pipe | "Read Topic from PubSub" >> beam.io.ReadFromPubSub(subscription=SUBSCRIPTION).with_output_types(bytes)
-        (order_events
-        | "Transform to BQ dict" >> beam.ParDo(BQTransformation())
-        )
-
-
+        order_events = pipe | "Read Topic from PubSub" >> beam.io.ReadFromPubSub(
+            subscription=SUBSCRIPTION
+        ).with_output_types(bytes)
+        (order_events | "Transform to BQ dict" >> beam.ParDo(BQTransformation()))
 
         """(
             order_events
