@@ -44,11 +44,8 @@ def generate_schema(schema_json):
 class BQTransformation(beam.DoFn):
     def process(self, element):
         try:
-            import pdb
-            pdb.set_trace()
-            elm = deepcopy(element)
-            print(elm)
-            return elm
+            print(element)
+            return element
 
         except Exception as err:
             # Issues while Writing to BigQuery: Defect raised ICF-2037
@@ -92,8 +89,12 @@ def dataflow(run_local):
     options = PipelineOptions.from_dictionary(pipeline_options)
     
     with beam.Pipeline(options=options) as pipe:
-        order_events = pipe | "Read Topic from PubSub" >> beam.io.ReadFromPubSub(subscription=SUBSCRIPTION)
-        #.with_output_types(bytes)
+        order_events = pipe | "Read Topic from PubSub" >> beam.io.ReadFromPubSub(subscription=SUBSCRIPTION).with_output_types(bytes)
+        (order_events
+        | "Transform to BQ dict" >> beam.ParDo(BQTransformation())
+        )
+
+
 
         """(
             order_events

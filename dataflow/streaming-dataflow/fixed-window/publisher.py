@@ -7,7 +7,7 @@ topic_name = 'orders'
 publisher = pubsub_v1.PublisherClient()
 
 # Create the message to be published
-message = 'Hello, World!'.encode('utf-8')
+message = 'Hello, Sweden!'.encode('utf-8')
 
 # Publish the message to the topic
 topic_path = publisher.topic_path('prasad-gcp4-project', topic_name)
