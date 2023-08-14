@@ -13,7 +13,7 @@ def hello_there():
 @app.route("/")
 def hello_world():
     name = request.args.get("name", "World")
-    return f"Hellow {name}!"
+    return f"Hello {name}!"
 
 
 def start():
