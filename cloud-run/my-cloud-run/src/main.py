@@ -1,7 +1,7 @@
 """ hello world app"""
 
 import os
-from flask import Flask, request
+from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
@@ -13,7 +13,11 @@ def hello_there():
 @app.route("/")
 def hello_world():
     name = request.args.get("name", "World")
-    return f"Hello {name}!"
+    response = jsonify({"message": f"Hello {name}!"})
+    response.headers.add("Access-Control-Allow-Origin", "*") # to allow CORS
+    response.headers.add("Content-Type", "application/json")
+    print(response)
+    return response
 
 
 def start():
