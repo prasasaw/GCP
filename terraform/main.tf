@@ -1,10 +1,4 @@
-resource "google_storage_bucket" "bucket" {
-  name     = "test-bucket-random-110784"
-  location = "europe-west2"
-}
-
-
-resource "google_storage_bucket" "anay_bucket" {
-  name     = "test-bucket-random-anay"
+resource "google_storage_bucket" "tf-state-bucket" {
+  name     = "tf-state-prasad-gcp4"
   location = "europe-west2"
 }
