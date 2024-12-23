@@ -7,7 +7,7 @@ name: Build and Deploy to Cloud Run
 on:
   pull_request:
     branches:
-      - main
+      - dev
     paths:
       - '.github/workflows/my_cloud_run_deploy_pr.yml'
       - 'cloud-run/my-cloud-run/**'
