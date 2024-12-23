@@ -1,6 +1,6 @@
 # Build cloud run image
 # Git Actions -> GCP authentication
-# Terraform steps.
+# Terraform steps..
 
 name: Build and Deploy to Cloud Run
 
