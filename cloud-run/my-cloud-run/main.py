@@ -15,7 +15,7 @@ import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-""" hello world app"""
+""" hello world app."""
 
 
 app = FastAPI()
@@ -28,7 +28,7 @@ def hello_there():
 @app.get("/")
 async def hello_world(request: Request):
     name = request.query_params.get("name", "World")
-    response = {"message": f"Hello {name}!"}
+    response = {"message": f"Hello, there {name}!"}
     return JSONResponse(content=response, headers={"Access-Control-Allow-Origin": "*"})
 
 
