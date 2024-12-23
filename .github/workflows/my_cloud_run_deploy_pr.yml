@@ -28,7 +28,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Configure Docker
-        run: gcloud auth configure-docker --quiet
+        run: gcloud auth configure-docker europe-west1-docker.pkg.dev --quiet
 
       - name: wd
         run: |
