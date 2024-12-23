@@ -1,15 +1,20 @@
-name: cloudrun-deploy
+# Build cloud run image
+# Git Actions -> GCP authentication
+# Terraform steps.
+
+name: Build and Deploy to Cloud Run
+
 on:
-  push:
-    paths:
-      # - ".github/workflows/cloud_run_deploy.yml"
-      # - "cloud-run/my-cloud-run/**"
+  pull_request:
     branches:
-      - dev
-      
+      - main
+    paths:
+      - '.github/workflows/my_cloud_run_deploy_pr.yml'
+      - 'cloud-run/my-cloud-run/**'
+
 jobs:
-  Cloud_Run_deploy:
-    name: Cloud Run Deploy
+  my_cloud_run_deploy:
+    name: Deploy my_cloud_run service
     runs-on: ubuntu-latest
     steps:
       - name: setup
@@ -32,9 +37,9 @@ jobs:
 
       - name: Build Docker image
         run: docker build ./cloud-run/my-cloud-run --tag gcr.io/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_APPLICATION }}
+        run: docker build ./cloud-run/my-cloud-run --tag ${GCP_REGION}-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_REPOSITORY }}/${{ secrets.GCP_APPLICATION }}
 
       - name: Push Docker image
         run: docker push gcr.io/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_APPLICATION }}
 
-      - name: Deploy Docker image
-        run: gcloud run deploy ${{ secrets.GCP_APPLICATION }} --image gcr.io/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_APPLICATION }} --region europe-west1  --platform managed --allow-unauthenticated --max-instances=10
+      
