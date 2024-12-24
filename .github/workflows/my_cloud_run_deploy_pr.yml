@@ -1,6 +1,5 @@
 # Build cloud run image
-# Git Actions -> GCP authentication
-# Terraform steps..
+# reference: https://medium.com/@sbkapelner/building-and-pushing-to-artifact-registry-with-github-actions-7027b3e443c1
 
 name: Build and Deploy to Cloud Run
 
@@ -16,6 +15,9 @@ jobs:
   my_cloud_run_deploy:
     name: Deploy my_cloud_run service
     runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: hello-cloud-run
+      REPO_NAME: repo-prasad-gcp4
     steps:
       - name: setup
         uses: google-github-actions/setup-gcloud@v0
@@ -37,9 +39,22 @@ jobs:
 
       - name: Build Docker image
         #run: docker build ./cloud-run/my-cloud-run --tag gcr.io/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_APPLICATION }}
-        run: docker build ./cloud-run/my-cloud-run --tag europe-west1-docker.pkg.dev/prasad-gcp4-project/repo-prasad-gcp4
+        #run: docker build ./cloud-run/my-cloud-run --tag europe-west1-docker.pkg.dev/prasad-gcp4-project/repo-prasad-gcp4
+        run: docker build -t $IMAGE_NAME:latest .
+
+      - name: Automatic Tagging of Releases
+        id: increment-git-tag
+        run: |
+          bash ./scripts/git_update.sh -v major
 
       - name: Push Docker image
-        run: docker push europe-west1-docker.pkg.dev/prasad-gcp4-project/repo-prasad-gcp4
+        env:
+          GIT_TAG: ${{ steps.increment-git-tag.outputs.git-tag }}
+        run: 
+          docker tag $IMAGE_NAME:latest europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/$REPO_NAME/$IMAGE_NAME:latest
+          docker tag $IMAGE_NAME:latest us-west2-docker.pkg.dev/$PROJECT_ID/images/$IMAGE_NAME:$GIT_TAG
+          docker push europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/$REPO_NAME/$IMAGE_NAME:latest
+          docker push europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/$REPO_NAME/$IMAGE_NAME:$GIT_TAG
+          #docker push europe-west1-docker.pkg.dev/prasad-gcp4-project/repo-prasad-gcp4
 
       
