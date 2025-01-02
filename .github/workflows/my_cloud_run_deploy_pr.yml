@@ -50,7 +50,7 @@ jobs:
       - name: Push Docker image
         env:
           GIT_TAG: ${{ steps.increment-git-tag.outputs.git-tag }}
-        run: 
+        run: |
           docker tag $IMAGE_NAME:latest europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/$REPO_NAME/$IMAGE_NAME:latest
           #docker tag $IMAGE_NAME:latest us-west2-docker.pkg.dev/$PROJECT_ID/images/$IMAGE_NAME:$GIT_TAG
           docker push europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/$REPO_NAME/$IMAGE_NAME:latest
