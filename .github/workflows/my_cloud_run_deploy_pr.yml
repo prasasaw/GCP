@@ -42,19 +42,19 @@ jobs:
         #run: docker build ./cloud-run/my-cloud-run --tag europe-west1-docker.pkg.dev/prasad-gcp4-project/repo-prasad-gcp4
         run: docker build  ./cloud-run/my-cloud-run -t $IMAGE_NAME:latest
 
-      - name: Automatic Tagging of Releases
-        id: increment-git-tag
-        run: |
-          bash ./scripts/git_update.sh -v major
+      # - name: Automatic Tagging of Releases
+      #   id: increment-git-tag
+      #   run: |
+      #     bash ./scripts/git_update.sh -v major
 
       - name: Push Docker image
-        env:
-          GIT_TAG: ${{ steps.increment-git-tag.outputs.git-tag }}
+        # env:
+        #   GIT_TAG: ${{ steps.increment-git-tag.outputs.git-tag }}
         run: |
           docker tag $IMAGE_NAME:latest europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/$REPO_NAME/$IMAGE_NAME:latest
-          #docker tag $IMAGE_NAME:latest us-west2-docker.pkg.dev/$PROJECT_ID/images/$IMAGE_NAME:$GIT_TAG
+        # docker tag $IMAGE_NAME:latest us-west2-docker.pkg.dev/$PROJECT_ID/images/$IMAGE_NAME:$GIT_TAG
           docker push europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/$REPO_NAME/$IMAGE_NAME:latest
-          docker push europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/$REPO_NAME/$IMAGE_NAME:$GIT_TAG
-          #docker push europe-west1-docker.pkg.dev/prasad-gcp4-project/repo-prasad-gcp4
+        # docker push europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/$REPO_NAME/$IMAGE_NAME:$GIT_TAG
+        # docker push europe-west1-docker.pkg.dev/prasad-gcp4-project/repo-prasad-gcp4
 
       
