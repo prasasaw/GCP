@@ -14,7 +14,7 @@ resource "google_cloud_run_service" "my_cloud_run" {
   template {
     spec {
       containers {
-        image = "us-docker.pkg.dev/cloudrun/container/hello"
+        image = "europe-west1-docker.pkg.dev/prasad-gcp4-project/repo-prasad-gcp4/hello-cloud-run"
       }
     }
   }
