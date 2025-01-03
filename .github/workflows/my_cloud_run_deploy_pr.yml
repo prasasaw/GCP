@@ -68,6 +68,6 @@ jobs:
         id: init
         run: |-
           terraform \
-          -chdir="$TF_WORKING_DIR" \
+          -chdir=env \
           init \
           -backend-config="$TF_ENV/config.gcs.tfbackend"
