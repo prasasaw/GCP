@@ -67,15 +67,10 @@ jobs:
         id: version
         run: terraform -version
 
-      - name: wd
-        run: |
-          pwd
-          cd infra/my-cloud-run/env
-          pwd
-      
       - name: Terraform Init
         id: init
         run: |-
           terraform \
+          -chdir="$TF_WORKING_DIR" \
           init \
           -backend-config="$TF_ENV/config.gcs.tfbackend"
