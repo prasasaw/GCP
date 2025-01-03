@@ -63,6 +63,9 @@ jobs:
       - name: Terraform version
         id: version
         run: terraform -version
+
+      - name: working directory1
+        run: pwd
       
       - name: Terraform Init
         id: init
