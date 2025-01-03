@@ -28,7 +28,7 @@ def hello_there():
 @app.get("/")
 async def hello_world(request: Request):
     name = request.query_params.get("name", "World")
-    response = {"message": f"Hello, there {name}!"}
+    response = {"message": f"Hello, how are you? {name}!"}
     return JSONResponse(content=response, headers={"Access-Control-Allow-Origin": "*"})
 
 

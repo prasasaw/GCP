@@ -11,9 +11,6 @@ on:
       - "terraform/**"
     branches:
       - dev
-      
-      
-  pull_request:
     
 
 jobs:

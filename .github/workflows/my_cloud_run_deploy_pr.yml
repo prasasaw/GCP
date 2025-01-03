@@ -1,45 +1,82 @@
 # Build cloud run image
-# Git Actions -> GCP authentication
-# Terraform steps..
+# reference: https://medium.com/@sbkapelner/building-and-pushing-to-artifact-registry-with-github-actions-7027b3e443c1
 
 name: Build and Deploy to Cloud Run
 
 on:
   pull_request:
     branches:
-      - main
+      - dev
     paths:
       - '.github/workflows/my_cloud_run_deploy_pr.yml'
       - 'cloud-run/my-cloud-run/**'
 
-jobs:
-  my_cloud_run_deploy:
-    name: Deploy my_cloud_run service
-    runs-on: ubuntu-latest
-    steps:
-      - name: setup
-        uses: google-github-actions/setup-gcloud@v0
-        with:
-          project_id: ${{ secrets.GCP_PROJECT }}
-          service_account_email: ${{ secrets.GCP_EMAIL }}
-          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+env:
+  TF_WORKING_DIR: infra/my-cloud-run/env
+  TF_ENV: dev
 
+
+jobs:
+  # build-cloud-run-image:
+  #   name: Build cloud run image
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     IMAGE_NAME: hello-cloud-run
+  #     REPO_NAME: repo-prasad-gcp4
+  #   steps:
+  #     - name: setup
+  #       uses: google-github-actions/setup-gcloud@v0
+  #       with:
+  #         project_id: ${{ secrets.GCP_PROJECT }}
+  #         service_account_email: ${{ secrets.GCP_EMAIL }}
+  #         service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+
+  #     - name: Check out Git repository
+  #       uses: actions/checkout@v2
+
+  #     - name: Configure Docker
+  #       run: gcloud auth configure-docker europe-west1-docker.pkg.dev --quiet
+
+  #     - name: Build Docker image
+  #       run: docker build  ./cloud-run/my-cloud-run -t $IMAGE_NAME:latest
+
+  #     - name: Push Docker image
+  #       run: |
+  #         docker tag $IMAGE_NAME:latest europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/$REPO_NAME/$IMAGE_NAME:latest
+  #         docker push europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/$REPO_NAME/$IMAGE_NAME:latest
+
+  terraform-deploy:
+    name: Terraform deployment
+    runs-on: ubuntu-latest
+    needs: [build-cloud-run-image]
+    steps:
       - name: Check out Git repository
         uses: actions/checkout@v2
 
-      - name: Configure Docker
-        run: gcloud auth configure-docker --quiet
-
-      - name: wd
-        run: |
-          cd cloud-run/my-cloud-run
-          pwd
-
-      - name: Build Docker image
-        run: docker build ./cloud-run/my-cloud-run --tag gcr.io/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_APPLICATION }}
-        run: docker build ./cloud-run/my-cloud-run --tag ${GCP_REGION}-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_REPOSITORY }}/${{ secrets.GCP_APPLICATION }}
-
-      - name: Push Docker image
-        run: docker push gcr.io/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_APPLICATION }}
-
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.5.3
       
+      - name: Terraform version
+        id: version
+        run: terraform -version
+
+      - name: Terraform Init
+        id: init
+        run: |-
+          terraform \
+          -chdir="$TF_WORKING_DIR" \
+          init \
+          -backend-config="$TF_ENV/config.gcs.tfbackend"
+
+      - name: Terraform Plan
+        id: plan
+        run: |-
+          terraform \
+          -chdir="$TF_WORKING_DIR" \
+          plan \
+          -no-color \
+          -var-file=${{ inputs.TF_ENV }}/vars.auto.tfvars \
+          -lock-timeout=500s \
+          -out="plan.tfplan"
